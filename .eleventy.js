@@ -1,5 +1,6 @@
 module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/css");
+  eleventyConfig.addPassthroughCopy("src/images");
   eleventyConfig.addGlobalData("currentYear", () => new Date().getFullYear());
 
   eleventyConfig.addFilter("readableDate", (dateObj) => {
@@ -11,8 +12,8 @@ module.exports = function (eleventyConfig) {
     });
   });
 
-  eleventyConfig.addCollection("essays", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/essays/*.md").sort((a, b) => {
+  eleventyConfig.addCollection("articles", function (collectionApi) {
+    return collectionApi.getFilteredByGlob("src/articles/*.md").sort((a, b) => {
       return (b.data.date || 0) - (a.data.date || 0);
     });
   });

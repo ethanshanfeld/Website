@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+  <rect width="600" height="600" fill="#ece9e2"/>
+  <rect x="180" y="170" width="240" height="180" rx="6" fill="#cfc6b0" stroke="#a99c7d" stroke-width="3"/>
+  <circle cx="240" cy="230" r="18" fill="#a99c7d"/>
+  <path d="M180 320l70-60 50 40 60-70 60 90v30H180z" fill="#a99c7d"/>
+  <text x="300" y="400" font-family="Georgia, serif" font-size="18" fill="#83795f" text-anchor="middle">Replace with article image</text>
+</svg>
