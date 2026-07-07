@@ -9,8 +9,12 @@ permalink: /about/
   <div class="bio">
     <h1>About</h1>
     <p>
-      [Write a few paragraphs about yourself here — your background, what you
-      write about, and why. Replace this text in <code>src/about.md</code>.]
+      Ethan Shanfeld is an award-winning writer and reporter for <em>Variety</em>,
+      where he has penned cover stories on Miley Cyrus, the Diddy trial, Disney
+      and more. His work has also been published by <em>Pitchfork</em>,
+      <em>Nylon</em> and <em>MTV News</em>. He has a double degree in
+      journalism and legal studies from Northwestern University. A native
+      Angeleno, he is currently based in New York.
     </p>
 
     <h2>Contact</h2>
