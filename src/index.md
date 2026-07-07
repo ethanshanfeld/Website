@@ -3,8 +3,7 @@ layout: base.njk
 title: Home
 ---
 <section class="hero">
-  <h1>Ethan Shanfeld</h1>
-  <p class="tagline">Featured writing. [Replace this line in <code>src/index.md</code>.]</p>
+  <h1>featured writing</h1>
 </section>
 
 <section class="article-grid">
