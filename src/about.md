@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 <section class="about">
-  <img src="/images/headshot-placeholder.svg" alt="Ethan Shanfeld" class="headshot">
+  <img src="/images/ethan-headshot.jpg" alt="Ethan Shanfeld" class="headshot">
 
   <div class="bio">
     <h1>About</h1>
