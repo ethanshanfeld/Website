@@ -4,18 +4,9 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/js");
   eleventyConfig.addGlobalData("currentYear", () => new Date().getFullYear());
 
-  eleventyConfig.addFilter("readableDate", (dateObj) => {
-    const d = new Date(dateObj);
-    return d.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  });
-
   eleventyConfig.addCollection("articles", function (collectionApi) {
     return collectionApi.getFilteredByGlob("src/articles/*.md").sort((a, b) => {
-      return (b.data.date || 0) - (a.data.date || 0);
+      return a.inputPath.localeCompare(b.inputPath);
     });
   });
 

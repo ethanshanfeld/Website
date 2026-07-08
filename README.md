@@ -11,28 +11,27 @@ change day-to-day lives in plain text files.
 2. Rename the copy, e.g. `src/articles/my-article.md`.
 3. At the top of the file, between the `---` lines, fill in:
    - `title` — the article's headline
-   - `outlet` — the publication it ran in (optional)
    - `url` — the link to the published article
    - `image` — the path to a thumbnail image (see below)
-   - `date` — used to order articles, newest first
 4. Leave everything below the second `---` blank — these files hold only
    the info above, nothing else.
 5. Save, then commit and push (or ask Claude to do it for you). The new
    tile appears automatically on the home page.
 
+Tiles are ordered alphabetically by file name. To control the order, name
+files with a number prefix, e.g. `01-my-first-piece.md`, `02-next-piece.md`.
+
 To remove an article, delete its file.
 
 ## Adding your own images
 
-Placeholder graphics are in `src/images/` so you can see how everything
-looks before you have real photos. To swap them in:
-
 1. Add your image file to `src/images/` (for a headshot) or
-   `src/images/articles/` (for an article thumbnail). JPG or PNG both work.
+   `src/images/articles/` (for an article thumbnail). JPG, PNG, and WebP
+   all work.
 2. In `src/about.md`, change the headshot `src="..."` to point to your new
    file, e.g. `/images/my-headshot.jpg`.
-3. In each article file in `src/articles/`, change `image:` to point to
-   your new file, e.g. `/images/articles/my-article-photo.jpg`.
+3. In each article file in `src/articles/`, set `image:` to point to your
+   new file, e.g. `/images/articles/my-article-photo.jpg`.
 
 Square images work best for article thumbnails.
 

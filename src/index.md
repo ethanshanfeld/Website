@@ -12,7 +12,6 @@ title: Home
     <img src="{{ article.data.image }}" alt="" class="article-thumb">
     <span class="article-overlay">
       <span class="article-title">{{ article.data.title }}</span>
-      {% if article.data.outlet %}<span class="article-outlet">{{ article.data.outlet }}</span>{% endif %}
     </span>
   </a>
 {%- endfor %}

@@ -22,7 +22,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.6;
   font-size: 1.1rem;
 }
@@ -156,21 +156,13 @@ main {
 }
 
 .article-title {
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 8;
   -webkit-box-orient: vertical;
   overflow: hidden;
-}
-
-.article-outlet {
-  margin-top: 0.5rem;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  opacity: 0.8;
 }
 
 .about {
@@ -214,7 +206,6 @@ main {
 
 .bio p {
   margin: 1em 0;
-  font-weight: 500;
 }
 
 .site-footer {
