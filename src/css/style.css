@@ -1,9 +1,9 @@
 :root {
-  --bg: #1c2660;
+  --bg: #000000;
   --text: #ffffff;
   --muted: #ffffff;
-  --accent: #ff3324;
-  --rule: #3c4590;
+  --accent: #f5c518;
+  --rule: #1f1f1f;
   --max-width: 60rem;
 }
 
@@ -37,12 +37,16 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  width: 14px;
-  height: 14px;
-  margin: -7px 0 0 -7px;
-  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
   background: var(--accent);
-  box-shadow: 0 0 14px rgba(255, 51, 36, 0.6);
+  clip-path: polygon(
+    50% 0%, 61% 35%, 98% 35%, 68% 57%,
+    79% 91%, 50% 70%, 21% 91%, 32% 57%,
+    2% 35%, 39% 35%
+  );
+  filter: drop-shadow(0 0 6px rgba(245, 197, 24, 0.7));
   pointer-events: none;
   z-index: 9999;
   transition: width 0.18s ease, height 0.18s ease, margin 0.18s ease;
@@ -50,9 +54,9 @@ a {
 }
 
 .cursor-dot--hover {
-  width: 36px;
-  height: 36px;
-  margin: -18px 0 0 -18px;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
 }
 
 .site-header {
@@ -146,7 +150,7 @@ main {
   justify-content: center;
   text-align: center;
   padding: 1.25rem;
-  background: rgba(28, 38, 96, 0.4);
+  background: rgba(0, 0, 0, 0.6);
   opacity: 0;
   transition: opacity 0.25s ease;
 }
