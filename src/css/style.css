@@ -19,7 +19,16 @@ html.custom-cursor button {
 
 body {
   margin: 0;
-  background: var(--bg);
+  padding: clamp(1rem, 3vw, 2.5rem);
+  background: repeating-linear-gradient(
+    135deg,
+    #ee2d24 0, #ee2d24 100px,
+    #f7941d 100px, #f7941d 200px,
+    #ffd400 200px, #ffd400 300px,
+    #39b54a 300px, #39b54a 400px,
+    #0075c9 400px, #0075c9 500px,
+    #92278f 500px, #92278f 600px
+  );
   color: var(--text);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 400;
@@ -63,16 +72,18 @@ a {
   gap: 1rem;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 2.5rem 1.5rem 1.5rem;
+  padding: 2rem 1.5rem 1.5rem;
+  background: var(--bg);
   border-bottom: 3px solid var(--text);
 }
 
 .site-title {
-  font-size: 1.5rem;
+  font-size: clamp(2.5rem, 8vw, 5rem);
   font-weight: 800;
   text-decoration: none;
   color: var(--text);
-  letter-spacing: 0.02em;
+  letter-spacing: -0.01em;
+  line-height: 0.9;
 }
 
 .site-nav {
@@ -97,13 +108,13 @@ main {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 3rem 1.5rem 4rem;
+  background: var(--bg);
 }
 
 .hero h1 {
-  font-size: clamp(2.75rem, 8vw, 5rem);
+  font-size: 1.1rem;
   font-weight: 800;
-  letter-spacing: -0.01em;
-  line-height: 0.95;
+  letter-spacing: 0.02em;
   margin: 0 0 0.75rem;
 }
 
@@ -178,7 +189,6 @@ main {
   object-fit: cover;
   border-radius: 50%;
   border: 4px solid var(--text);
-  box-shadow: 8px 8px 0 var(--text);
   flex-shrink: 0;
 }
 
@@ -212,12 +222,12 @@ main {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 1.5rem;
+  background: var(--bg);
   border-top: 3px solid var(--text);
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  opacity: 0.75;
 }
 
 @media (max-width: 480px) {
