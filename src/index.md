@@ -18,7 +18,8 @@ title: Home
   <a class="article-card" href="{{ article.data.url }}" target="_blank" rel="noopener">
     <img src="{{ article.data.image }}" alt="" class="article-thumb">
     <span class="article-overlay">
-      <span class="article-title">{{ article.data.title }}</span>
+      <span class="article-title-wrap"><span class="article-title">{{ article.data.title }}</span></span>
+      <span class="article-cta">&#10038; click to read &#10038;</span>
     </span>
     {% if article.data.cover %}<span class="cover-sticker"><img src="{{ article.data.cover }}" alt="Magazine cover"><span>Cover Story</span></span>{% endif %}
   </a>

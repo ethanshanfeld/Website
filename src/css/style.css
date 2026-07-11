@@ -216,7 +216,7 @@ a {
 }
 
 .article-card:hover .article-thumb {
-  opacity: 0.22;
+  opacity: 0.4;
 }
 
 .article-overlay {
@@ -227,23 +227,48 @@ a {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 1.1rem;
+  padding: 0.9rem;
+  overflow: hidden;
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transform: scale(1.06);
+  transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
 .article-card:hover .article-overlay {
   opacity: 1;
+  transform: scale(1);
+}
+
+.article-title-wrap {
+  display: block;
+  transform: rotate(-2.5deg);
 }
 
 .article-title {
+  display: inline;
+  background: var(--yellow);
+  color: var(--blue);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 3px 9px;
   font-size: 0.72rem;
   font-weight: bold;
-  line-height: 1.45;
-  display: -webkit-box;
-  -webkit-line-clamp: 9;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 2.1;
+}
+
+.article-cta {
+  margin-top: 16px;
+  display: inline-block;
+  font-family: "Courier New", monospace;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--cyan);
+  background: var(--black);
+  border: 2px dashed var(--cyan);
+  padding: 4px 12px;
+  transform: rotate(1.5deg);
 }
 
 /* ---- cover story sticker ---- */
