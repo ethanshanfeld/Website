@@ -2,7 +2,7 @@ name: Deploy site
 
 on:
   push:
-    branches: [main]
+    branches: [claude/writers-website-setup-n03ttu]
   workflow_dispatch:
 
 permissions:
