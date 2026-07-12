@@ -5,7 +5,7 @@ permalink: /about/
 ---
 <section class="about-panel">
   <div class="about">
-    <img src="/images/ethan-headshot.jpg" alt="Ethan Shanfeld" class="headshot">
+    <img src="{{ '/images/ethan-headshot.jpg' | url }}" alt="Ethan Shanfeld" class="headshot">
 
     <div class="bio">
       <h1>about</h1>
