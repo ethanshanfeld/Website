@@ -42,9 +42,9 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  width: 26px;
-  height: 26px;
-  margin: -13px 0 0 -13px;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
   background: var(--yellow);
   clip-path: polygon(
     50% 0%, 61% 35%, 98% 35%, 68% 57%,
@@ -59,9 +59,9 @@ a {
 }
 
 .cursor-dot--hover {
-  width: 46px;
-  height: 46px;
-  margin: -23px 0 0 -23px;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
 }
 
 /* ---- nav ---- */
@@ -280,6 +280,12 @@ a {
   transform: rotate(-9deg);
   filter: drop-shadow(4px 5px 0 rgba(0, 0, 0, 0.5));
   z-index: 2;
+  opacity: 1;
+  transition: opacity 0.22s ease;
+}
+
+.article-card:hover .cover-sticker {
+  opacity: 0;
 }
 
 .cover-sticker img {

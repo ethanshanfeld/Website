@@ -22,7 +22,6 @@ permalink: /about/
       <p>
         <a href="mailto:ethanshanfeld@gmail.com">ethanshanfeld@gmail.com</a>
       </p>
-      <p>[Add links to social media, Substack, or anywhere else readers can find you.]</p>
     </div>
   </div>
 </section>
