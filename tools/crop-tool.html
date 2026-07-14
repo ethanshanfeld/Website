@@ -41,13 +41,13 @@
   .frame.active { display: block; }
   .frame.dragging { cursor: grabbing; }
   .frame img {
-    position: absolute;
-    left: 0;
-    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
     user-select: none;
     -webkit-user-drag: none;
     pointer-events: none;
-    max-width: none;
   }
   .controls { display: none; }
   .controls.active { display: block; }
@@ -88,8 +88,8 @@
     Drop in a photo (ideally the same "-full" image referenced in an article's
     front matter). Drag inside the yellow square to pan, use the slider (or
     scroll) to zoom, then copy the two lines into that article's
-    <code>.md</code> file. You can drag at any zoom level, including fully
-    zoomed out.
+    <code>.md</code> file. This preview uses the exact same CSS the site
+    uses, so what you see here is what ships.
   </p>
 
   <div class="dropzone" id="dropzone">Click to choose an image, or drag one here</div>
@@ -123,34 +123,35 @@ zoom: 1.00</div>
     const copyBtn = document.getElementById('copyBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    // All state below is real pixel geometry (frame size S, natural image
-    // size, image top-left position imgX/imgY, and totalScale = natural-px
-    // to on-screen-px factor). This mirrors exactly how the site itself
-    // renders a tile (object-fit: cover, then object-position, then an
-    // extra transform: scale(zoom) from the frame's center) so panning and
-    // zooming behave identically here and on the live page, and dragging
-    // works correctly at any zoom level -- not just zoomed in from center.
-    let naturalW = 0, naturalH = 0, coverScale = 1;
-    let totalScale = 1, imgX = 0, imgY = 0;
+    // State is exactly what ships to the site: fx/fy (0-100, the
+    // object-position / transform-origin percentages) and z (the zoom
+    // multiplier). The preview below is styled with the identical CSS
+    // recipe used on the live page (object-fit: cover, object-position,
+    // transform-origin, transform: scale) so there is no separate
+    // approximation to keep in sync -- what you see here is the real
+    // render.
+    let naturalW = 0, naturalH = 0;
+    let fx = 50, fy = 50, z = 1;
     let dragging = false, lastX = 0, lastY = 0;
 
     function frameSize() {
       return frame.getBoundingClientRect().width;
     }
 
-    function clampPosition() {
+    // Rendered (object-fit: cover) size of the image at the frame's current
+    // size, before any extra zoom.
+    function coverSize() {
       const S = frameSize();
-      const renderedW = naturalW * totalScale;
-      const renderedH = naturalH * totalScale;
-      imgX = Math.min(0, Math.max(S - renderedW, imgX));
-      imgY = Math.min(0, Math.max(S - renderedH, imgY));
+      const coverScale = S / Math.min(naturalW, naturalH);
+      return { S, rw: naturalW * coverScale, rh: naturalH * coverScale };
     }
 
-    function applyGeometry() {
-      preview.style.width = (naturalW * totalScale) + 'px';
-      preview.style.height = (naturalH * totalScale) + 'px';
-      preview.style.left = imgX + 'px';
-      preview.style.top = imgY + 'px';
+    function render() {
+      preview.style.objectPosition = fx + '% ' + fy + '%';
+      preview.style.transformOrigin = fx + '% ' + fy + '%';
+      preview.style.transform = 'scale(' + z + ')';
+      zoomVal.textContent = z.toFixed(2);
+      output.textContent = 'focus: ' + Math.round(fx) + '% ' + Math.round(fy) + '%\nzoom: ' + z.toFixed(2);
     }
 
     function loadFile(file) {
@@ -167,14 +168,9 @@ zoom: 1.00</div>
     }
 
     function resetView() {
-      const S = frameSize();
-      coverScale = S / Math.min(naturalW, naturalH);
-      totalScale = coverScale;
-      imgX = (S - naturalW * totalScale) / 2;
-      imgY = (S - naturalH * totalScale) / 2;
+      fx = 50; fy = 50; z = 1;
       zoomSlider.value = 1;
-      applyGeometry();
-      updateOutput();
+      render();
     }
 
     dropzone.addEventListener('click', () => fileInput.click());
@@ -186,47 +182,14 @@ zoom: 1.00</div>
       dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('drag'); }));
     dropzone.addEventListener('drop', (e) => loadFile(e.dataTransfer.files[0]));
 
-    function updateOutput() {
-      const S = frameSize();
-      const zoom = totalScale / coverScale;
-      const renderedWAtCover = naturalW * coverScale;
-      const renderedHAtCover = naturalH * coverScale;
-
-      // Reverse the site's pipeline: pan happens at coverScale via
-      // object-position, then transform: scale(zoom) is applied from the
-      // frame's own center. Solve for the object-position percentages that
-      // reproduce our current imgX/imgY/totalScale.
-      const preZoomX = S / 2 + (imgX - S / 2) / zoom;
-      const preZoomY = S / 2 + (imgY - S / 2) / zoom;
-
-      const spanX = S - renderedWAtCover;
-      const spanY = S - renderedHAtCover;
-      const focusX = spanX === 0 ? 50 : clampPct(100 * preZoomX / spanX);
-      const focusY = spanY === 0 ? 50 : clampPct(100 * preZoomY / spanY);
-
-      zoomVal.textContent = zoom.toFixed(2);
-      output.textContent = 'focus: ' + Math.round(focusX) + '% ' + Math.round(focusY) + '%\nzoom: ' + zoom.toFixed(2);
-    }
-
     function clampPct(v) { return Math.max(0, Math.min(100, v)); }
 
-    function setZoom(newZoomMultiplier) {
-      const S = frameSize();
-      newZoomMultiplier = Math.max(1, Math.min(3, newZoomMultiplier));
-      const newTotalScale = coverScale * newZoomMultiplier;
-      // Zoom toward the frame's center, matching the site's transform-origin.
-      const cx = S / 2, cy = S / 2;
-      const ratio = newTotalScale / totalScale;
-      imgX = cx - (cx - imgX) * ratio;
-      imgY = cy - (cy - imgY) * ratio;
-      totalScale = newTotalScale;
-      clampPosition();
-      applyGeometry();
-      updateOutput();
-    }
-
     zoomSlider.addEventListener('input', () => {
-      setZoom(parseFloat(zoomSlider.value));
+      // Zoom is anchored at (fx, fy) via transform-origin, so changing z
+      // alone keeps the chosen focal point visually fixed -- no
+      // compensation needed.
+      z = parseFloat(zoomSlider.value);
+      render();
     });
 
     function startDrag(x, y) {
@@ -236,12 +199,18 @@ zoom: 1.00</div>
     }
     function moveDrag(x, y) {
       if (!dragging) return;
-      imgX += (x - lastX);
-      imgY += (y - lastY);
+      const { S, rw, rh } = coverSize();
+      const dx = x - lastX, dy = y - lastY;
+      // Content top-left after object-position + scale(z) from (fx,fy) is
+      // linear in fx/fy: X(fx) = fx * (S - rw*z) / 100. Solving dX = dx for
+      // dfx gives this. (S - rw*z) is <= 0 whenever the image overflows the
+      // frame on that axis, which is why dragging right decreases fx.
+      const denomX = S - rw * z;
+      const denomY = S - rh * z;
+      if (denomX !== 0) fx = clampPct(fx + (dx * 100) / denomX);
+      if (denomY !== 0) fy = clampPct(fy + (dy * 100) / denomY);
       lastX = x; lastY = y;
-      clampPosition();
-      applyGeometry();
-      updateOutput();
+      render();
     }
     function endDrag() {
       dragging = false;
@@ -264,9 +233,9 @@ zoom: 1.00</div>
 
     frame.addEventListener('wheel', (e) => {
       e.preventDefault();
-      const zoom = totalScale / coverScale;
-      setZoom(zoom - e.deltaY * 0.002);
-      zoomSlider.value = (totalScale / coverScale).toFixed(2);
+      z = Math.max(1, Math.min(3, z - e.deltaY * 0.002));
+      zoomSlider.value = z.toFixed(2);
+      render();
     }, { passive: false });
 
     copyBtn.addEventListener('click', () => {
