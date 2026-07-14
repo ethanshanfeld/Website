@@ -207,9 +207,16 @@ a {
   transform: rotate(2deg);
 }
 
-.article-thumb {
+.article-thumb-frame {
+  display: block;
   width: 100%;
   aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.article-thumb {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
   transition: opacity 0.25s ease;

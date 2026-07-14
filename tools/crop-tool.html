@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tile Crop Tool</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 640px;
+    margin: 40px auto;
+    padding: 0 20px 60px;
+    background: #111;
+    color: #eee;
+  }
+  h1 { font-size: 1.3rem; margin-bottom: 0.2em; }
+  p.hint { color: #999; font-size: 0.9rem; line-height: 1.5; }
+  .dropzone {
+    border: 3px dashed #555;
+    border-radius: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    margin: 20px 0;
+    color: #999;
+  }
+  .dropzone.drag { border-color: #4af; color: #4af; }
+  input[type="file"] { display: none; }
+  .frame {
+    width: 400px;
+    height: 400px;
+    max-width: 100%;
+    margin: 20px auto;
+    overflow: hidden;
+    position: relative;
+    background: #222;
+    border: 4px dashed #fff200;
+    cursor: grab;
+    touch-action: none;
+    display: none;
+  }
+  .frame.active { display: block; }
+  .frame.dragging { cursor: grabbing; }
+  .frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+  .controls { display: none; }
+  .controls.active { display: block; }
+  .zoom-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .zoom-row input[type="range"] { flex: 1; }
+  .output {
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.95rem;
+    white-space: pre;
+    margin: 16px 0;
+  }
+  button {
+    background: #fff200;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  button:active { transform: translateY(1px); }
+  .reset { background: #333; color: #eee; margin-left: 8px; }
+</style>
+</head>
+<body>
+  <h1>Tile Crop Tool</h1>
+  <p class="hint">
+    Drop in a photo (ideally the same "-full" image referenced in an article's
+    front matter). Drag inside the yellow square to pan, use the slider to
+    zoom, then copy the two lines into that article's <code>.md</code> file.
+  </p>
+
+  <div class="dropzone" id="dropzone">Click to choose an image, or drag one here</div>
+  <input type="file" id="fileInput" accept="image/*">
+
+  <div class="frame" id="frame">
+    <img id="preview" src="" alt="">
+  </div>
+
+  <div class="controls" id="controls">
+    <div class="zoom-row">
+      <span>zoom</span>
+      <input type="range" id="zoom" min="1" max="3" step="0.01" value="1">
+      <span id="zoomVal">1.00</span>
+    </div>
+    <div class="output" id="output">focus: 50% 50%
+zoom: 1</div>
+    <button id="copyBtn">Copy</button>
+    <button id="resetBtn" class="reset">Reset</button>
+  </div>
+
+  <script>
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const frame = document.getElementById('frame');
+    const preview = document.getElementById('preview');
+    const controls = document.getElementById('controls');
+    const zoomSlider = document.getElementById('zoom');
+    const zoomVal = document.getElementById('zoomVal');
+    const output = document.getElementById('output');
+    const copyBtn = document.getElementById('copyBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let focusX = 50, focusY = 50, zoom = 1;
+    let dragging = false, lastX = 0, lastY = 0;
+
+    function loadFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      const url = URL.createObjectURL(file);
+      preview.src = url;
+      frame.classList.add('active');
+      controls.classList.add('active');
+      focusX = 50; focusY = 50; zoom = 1;
+      zoomSlider.value = 1;
+      render();
+    }
+
+    dropzone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => loadFile(e.target.files[0]));
+
+    ['dragenter', 'dragover'].forEach(evt =>
+      dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('drag'); }));
+    ['dragleave', 'drop'].forEach(evt =>
+      dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('drag'); }));
+    dropzone.addEventListener('drop', (e) => loadFile(e.dataTransfer.files[0]));
+
+    function render() {
+      preview.style.objectPosition = focusX + '% ' + focusY + '%';
+      preview.style.transform = 'scale(' + zoom + ')';
+      zoomVal.textContent = zoom.toFixed(2);
+      output.textContent = 'focus: ' + Math.round(focusX) + '% ' + Math.round(focusY) + '%\nzoom: ' + zoom.toFixed(2);
+    }
+
+    zoomSlider.addEventListener('input', () => {
+      zoom = parseFloat(zoomSlider.value);
+      render();
+    });
+
+    function clamp(v) { return Math.max(0, Math.min(100, v)); }
+
+    function startDrag(x, y) {
+      dragging = true;
+      lastX = x; lastY = y;
+      frame.classList.add('dragging');
+    }
+    function moveDrag(x, y) {
+      if (!dragging) return;
+      const rect = frame.getBoundingClientRect();
+      // Dragging the image right should reveal more of the source's left side,
+      // which means decreasing the object-position percentage.
+      const dxPct = ((x - lastX) / rect.width) * 100 / zoom;
+      const dyPct = ((y - lastY) / rect.height) * 100 / zoom;
+      focusX = clamp(focusX - dxPct);
+      focusY = clamp(focusY - dyPct);
+      lastX = x; lastY = y;
+      render();
+    }
+    function endDrag() {
+      dragging = false;
+      frame.classList.remove('dragging');
+    }
+
+    frame.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY));
+    window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
+    window.addEventListener('mouseup', endDrag);
+
+    frame.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      startDrag(t.clientX, t.clientY);
+    }, { passive: true });
+    frame.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      moveDrag(t.clientX, t.clientY);
+    }, { passive: true });
+    frame.addEventListener('touchend', endDrag);
+
+    frame.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      zoom = Math.max(1, Math.min(3, zoom - e.deltaY * 0.001));
+      zoomSlider.value = zoom;
+      render();
+    }, { passive: false });
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(output.textContent).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1200);
+      });
+    });
+
+    resetBtn.addEventListener('click', () => {
+      focusX = 50; focusY = 50; zoom = 1;
+      zoomSlider.value = 1;
+      render();
+    });
+  </script>
+</body>
+</html>
