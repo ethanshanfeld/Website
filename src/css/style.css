@@ -11,12 +11,6 @@
   box-sizing: border-box;
 }
 
-html.custom-cursor,
-html.custom-cursor a,
-html.custom-cursor button {
-  cursor: none;
-}
-
 body {
   margin: 0;
   padding: 30px 18px 40px;
@@ -35,33 +29,6 @@ body {
 
 a {
   color: var(--cyan);
-}
-
-/* ---- gold star cursor ---- */
-.cursor-dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 20px;
-  height: 20px;
-  margin: -10px 0 0 -10px;
-  background: var(--yellow);
-  clip-path: polygon(
-    50% 0%, 61% 35%, 98% 35%, 68% 57%,
-    79% 91%, 50% 70%, 21% 91%, 32% 57%,
-    2% 35%, 39% 35%
-  );
-  filter: drop-shadow(0 0 6px rgba(255, 242, 0, 0.7));
-  pointer-events: none;
-  z-index: 9999;
-  transition: width 0.18s ease, height 0.18s ease, margin 0.18s ease;
-  will-change: transform;
-}
-
-.cursor-dot--hover {
-  width: 36px;
-  height: 36px;
-  margin: -18px 0 0 -18px;
 }
 
 /* ---- nav ---- */
