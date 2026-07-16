@@ -251,16 +251,39 @@ a {
 }
 
 /* devices with no cursor to hover with: show the headline as a caption
-   below the tile instead of hiding it behind a hover reveal */
+   collaged onto the bottom of the tile instead of hiding it behind a
+   hover reveal. the dashed frame moves to .article-media so the caption
+   itself sits directly on the page background, not a black box. */
 @media (hover: none) {
+  .article-card {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .article-media {
+    display: block;
+    width: 100%;
+    border: 6px dashed var(--yellow);
+    background: var(--black);
+    padding: 6px;
+  }
+
   .article-overlay {
     position: static;
     inset: auto;
     opacity: 1;
     transform: none;
     overflow: visible;
-    margin-top: 34px;
-    padding: 0 0.2rem;
+    margin-top: -30px;
+    padding: 0 0.4rem;
+    z-index: 3;
+  }
+
+  /* free up the bottom of the tile for the headline collage */
+  .cover-sticker {
+    top: -22px;
+    bottom: auto;
   }
 }
 
@@ -386,5 +409,12 @@ a {
   }
   .about-panel {
     padding: 24px 20px;
+  }
+}
+
+@media (hover: none) and (max-width: 520px) {
+  .cover-sticker {
+    top: -16px;
+    bottom: auto;
   }
 }
