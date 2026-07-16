@@ -16,14 +16,16 @@ title: Home
 <section class="article-grid">
 {%- for article in collections.articles %}
   <a class="article-card" href="{{ article.data.url }}" target="_blank" rel="noopener">
-    <span class="article-thumb-frame">
-      <img src="{{ article.data.image | url }}" alt="" class="article-thumb" style="object-position: {{ article.data.focus | default: '50% 50%' }}; transform-origin: {{ article.data.focus | default: '50% 50%' }}; transform: scale({{ article.data.zoom | default: 1 }});">
+    <span class="article-media">
+      <span class="article-thumb-frame">
+        <img src="{{ article.data.image | url }}" alt="" class="article-thumb" style="object-position: {{ article.data.focus | default: '50% 50%' }}; transform-origin: {{ article.data.focus | default: '50% 50%' }}; transform: scale({{ article.data.zoom | default: 1 }});">
+      </span>
+      {%- if article.data.cover %}<span class="cover-sticker"><img src="{{ article.data.cover | url }}" alt="Magazine cover"><span>Cover Story</span></span>{% endif -%}
     </span>
     <span class="article-overlay">
       <span class="article-title-wrap"><span class="article-title">{{ article.data.title }}</span></span>
       <span class="article-cta">&#10038; click to read &#10038;</span>
     </span>
-    {% if article.data.cover %}<span class="cover-sticker"><img src="{{ article.data.cover | url }}" alt="Magazine cover"><span>Cover Story</span></span>{% endif %}
   </a>
 {%- endfor %}
 </section>
