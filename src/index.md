@@ -2,30 +2,19 @@
 layout: base.njk
 title: Home
 ---
-<section class="hero">
-  <h1 class="balloon-title">
-    <span class="layer l-black">ethan shanfeld</span>
-    <span class="layer l-white">ethan shanfeld</span>
-    <span class="layer l-color">ethan shanfeld</span>
-    <span class="layer l-shine" aria-hidden="true">ethan shanfeld</span>
-  </h1>
-</section>
-
-<div class="marquee">&#10038; &#10038; &#10038; FEATURED WRITING &#10038; &#10038; &#10038;</div>
-
-<section class="article-grid">
-{%- for article in collections.articles %}
-  <a class="article-card" href="{{ article.data.url }}" target="_blank" rel="noopener">
-    <span class="article-media">
-      <span class="article-thumb-frame">
-        <img src="{{ article.data.image | url }}" alt="" class="article-thumb" style="object-position: {{ article.data.focus | default: '50% 50%' }}; transform-origin: {{ article.data.focus | default: '50% 50%' }}; transform: scale({{ article.data.zoom | default: 1 }});">
-      </span>
-      {%- if article.data.cover %}<span class="cover-sticker"><img src="{{ article.data.cover | url }}" alt="Magazine cover"><span>Cover Story</span></span>{% endif -%}
-    </span>
-    <span class="article-overlay">
-      <span class="article-title-wrap"><span class="article-title">{{ article.data.title }}</span></span>
-      <span class="article-cta">&#10038; click to read &#10038;</span>
-    </span>
-  </a>
+<section class="rows">
+{%- for row in collections.homeRows %}
+  <div class="row row-{{ row.height }}{% if row.type == "covers" %} covers{% endif %}">
+  {%- for item in row.items %}
+    <a class="cell" href="{{ item.data.url }}" target="_blank" rel="noopener">
+      {%- if row.type == "covers" -%}
+      <img src="{{ item.data.cover | url }}" alt="">
+      {%- else -%}
+      <img src="{{ item.data.image | url }}" alt="" style="object-position: {{ item.data.focus | default: '50% 50%' }};">
+      {%- endif %}
+      <div class="overlay"><span class="ttl">{{ item.data.title }}</span></div>
+    </a>
+  {%- endfor %}
+  </div>
 {%- endfor %}
 </section>

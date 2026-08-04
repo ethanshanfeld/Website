@@ -8,10 +8,11 @@
   <link rel="stylesheet" href="{{ '/css/style.css' | url }}">
 </head>
 <body>
-  <header class="site-header">
-    <nav class="site-nav">
-      <a href="{{ '/' | url }}">Home</a>
-      <a href="{{ '/about/' | url }}">About</a>
+  <header class="topbar">
+    <a class="wordmark" href="{{ '/' | url }}">Ethan Shanfeld</a>
+    <nav>
+      <a href="{{ '/' | url }}"{% if title == "Home" %} class="current"{% endif %}>Work</a>
+      <a href="{{ '/about/' | url }}"{% if title == "About" %} class="current"{% endif %}>About</a>
     </nav>
   </header>
 
@@ -19,8 +20,9 @@
     {{ content | safe }}
   </main>
 
-  <footer class="site-footer">
-    <p>&#10038; &copy; {{ currentYear }} ethan shanfeld &#10038;</p>
+  <footer class="foot">
+    <span>&copy; {{ currentYear }} Ethan Shanfeld</span>
+    <a href="mailto:ethanshanfeld@gmail.com">ethanshanfeld@gmail.com</a>
   </footer>
 </body>
 </html>
