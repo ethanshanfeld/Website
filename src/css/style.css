@@ -76,10 +76,11 @@ a { color: inherit; }
   width: 100%; height: 100%; object-fit: cover; display: block;
 }
 /* cover stories: show the whole, uncropped vertical magazine page.
-   the cell's aspect-ratio matches the cover art's actual 560:740
-   proportions exactly, so object-fit:contain never has to letterbox. */
+   the cell's aspect-ratio matches the cover art's actual proportions
+   (1500x1939, 1200x1551 and 1000x1293 all share this ~0.7735 ratio),
+   so object-fit:contain never has to letterbox. */
 .row.covers { height: auto !important; }
-.row.covers .cell { aspect-ratio: 560 / 740; height: auto; }
+.row.covers .cell { aspect-ratio: 1500 / 1939; height: auto; }
 .row.covers .cell img { object-fit: contain; background: var(--paper-deep); }
 
 .cell .overlay {
