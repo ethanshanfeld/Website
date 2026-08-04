@@ -123,27 +123,14 @@ a { color: inherit; }
 }
 @media (max-width: 640px) {
   .rows { gap: 3px; padding: 0 18px 18px; }
-  .row { gap: 3px; flex-wrap: wrap; }
-  .row.covers { flex-wrap: nowrap; }
-
-  /* story rows become a plain two-column grid on narrow screens
-     instead of a fixed-height flex row. flex-wrap here caused a
-     fixed pixel height (sized for one line on desktop) to be too
-     short for a wrapped second line, so the overflow spilled into --
-     and got visually painted over by -- the next row's background.
-     grid sidesteps that (rows auto-size to content) and keeps every
-     tile the same size, instead of an odd last tile stretching to
-     fill its line the way flex-grow would. */
-  .row:not(.covers) {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    height: auto;
-  }
-  .row:not(.covers) .cell { aspect-ratio: 4 / 5; height: auto; }
-
+  .row { gap: 3px; }
+  .row-tall { height: 220px; }
+  .row-med { height: 160px; }
+  .row-cozy { height: 130px; }
+  .row-short { height: 110px; }
   .topbar { padding: 22px 18px 18px; }
   .foot { padding-left: 18px; padding-right: 18px; }
-  .cell .ttl { font-size: 0.78rem; }
+  .cell .ttl { font-size: 0.7rem; padding: 0.6rem; }
 }
 
 /* ---- about page ---- */
