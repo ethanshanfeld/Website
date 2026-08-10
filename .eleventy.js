@@ -10,43 +10,35 @@ module.exports = function (eleventyConfig) {
     });
   });
 
-  // Homepage grid rows: articles with a `cover` field become full-bleed
-  // cover tiles grouped into their own rows; everything else is a story
-  // tile. Rows alternate height for size variety, and cover/story rows
-  // interleave (one cover row, then up to two story rows) so the grid
-  // keeps its rhythm as articles are added or removed -- no manual
-  // per-article row/size assignment needed.
+  // Homepage grid rows: each article names which visual row it belongs to
+  // via its `row` number (matching frontmatter field `row`), so the exact
+  // grouping/order laid out in the crop-and-size playground tool can be
+  // reproduced exactly. Articles with a `cover` field render full-bleed,
+  // uncropped, at a locked equal width; everything else is a cropped
+  // story tile whose relative width comes from its `width` field
+  // (defaults to 1) and whose row gets its height from ROW_HEIGHTS below.
   eleventyConfig.addCollection("homeRows", function (collectionApi) {
     const articles = collectionApi.getFilteredByGlob("src/articles/*.md").sort((a, b) => {
       return a.inputPath.localeCompare(b.inputPath);
     });
-    const covers = articles.filter((a) => a.data.cover);
-    const stories = articles.filter((a) => !a.data.cover);
+    const ROW_HEIGHTS = { 2: 320, 3: 260, 5: 320 };
 
-    function chunk(arr, size) {
-      const out = [];
-      for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
-      return out;
-    }
+    const groups = new Map();
+    articles.forEach((a) => {
+      const n = a.data.row;
+      if (!groups.has(n)) groups.set(n, []);
+      groups.get(n).push(a);
+    });
 
-    const coverRows = chunk(covers, 4).map((items, i) => ({
-      type: "covers",
-      height: i % 2 === 0 ? "tall" : "med",
-      items,
-    }));
-    const storyRows = chunk(stories, 3).map((items, i) => ({
-      type: "stories",
-      height: i % 2 === 0 ? "cozy" : "short",
-      items,
-    }));
-
-    const rows = [];
-    let ci = 0, si = 0;
-    while (ci < coverRows.length || si < storyRows.length) {
-      if (ci < coverRows.length) rows.push(coverRows[ci++]);
-      for (let n = 0; n < 2 && si < storyRows.length; n++) rows.push(storyRows[si++]);
-    }
-    return rows;
+    return [...groups.keys()].sort((a, b) => a - b).map((n) => {
+      const items = groups.get(n);
+      const isCovers = items.every((a) => a.data.cover);
+      return {
+        type: isCovers ? "covers" : "stories",
+        height: isCovers ? "auto" : (ROW_HEIGHTS[n] || 320),
+        items,
+      };
+    });
   });
 
   return {

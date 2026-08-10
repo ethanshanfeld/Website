@@ -110,24 +110,19 @@ a { color: inherit; }
 }
 .cell:hover .ttl { transform: translateY(0); opacity: 1; }
 
-.row-tall { height: 600px; }
-.row-med { height: 440px; }
-.row-cozy { height: 320px; }
-.row-short { height: 260px; }
+/* each story row sets its own --row-h inline (see index.md); the actual
+   height is that value times --row-scale, so any custom per-row height
+   set in the CMS still scales down sensibly on smaller screens without
+   needing a fixed set of height "buckets". */
+.row:not(.covers) { height: calc(var(--row-h, 320px) * var(--row-scale, 1)); }
 
 @media (max-width: 900px) {
-  .row-tall { height: 420px; }
-  .row-med { height: 320px; }
-  .row-cozy { height: 240px; }
-  .row-short { height: 190px; }
+  :root { --row-scale: 0.72; }
 }
 @media (max-width: 640px) {
+  :root { --row-scale: 0.42; }
   .rows { gap: 3px; padding: 0 18px 18px; }
   .row { gap: 3px; }
-  .row-tall { height: 220px; }
-  .row-med { height: 160px; }
-  .row-cozy { height: 130px; }
-  .row-short { height: 110px; }
   .topbar { padding: 22px 18px 18px; }
   .foot { padding-left: 18px; padding-right: 18px; }
   .cell .ttl { font-size: 0.7rem; padding: 0.6rem; }
